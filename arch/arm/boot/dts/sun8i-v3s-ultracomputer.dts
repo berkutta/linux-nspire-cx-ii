@@ -1,0 +1,75 @@
+// SPDX-License-Identifier: (GPL-2.0+ OR X11)
+/*
+ * Copyright 2021 Benjamin Marty <info@benjaminmarty.ch>
+ */
+
+/dts-v1/;
+#include "sun8i-v3s.dtsi"
+#include "sunxi-common-regulators.dtsi"
+
+/ {
+	model = "Ultracomputer V3s";
+	compatible = "ultracomputer-v3s", "allwinner,sun8i-v3s";
+
+	aliases {
+		serial0 = &uart0;
+	};
+
+	chosen {
+		stdout-path = "serial0:115200n8";
+	};
+
+	aliases {
+		ethernet0 = &emac;
+	};
+
+	leds {
+		compatible = "gpio-leds";
+
+		blink_led {
+			label = "ultracomputer:blue:blink";
+			gpios = <&pio 6 0 GPIO_ACTIVE_HIGH>; /* PG0 */
+			linux,default-trigger = "heartbeat";
+			default-state = "off";
+		};
+
+		0_led {
+			label = "ultracomputer:blue:0";
+			gpios = <&pio 6 1 GPIO_ACTIVE_HIGH>; /* PG1 */
+			default-state = "off";
+		};
+
+		1_led {
+			label = "ultracomputer:blue:1";
+			gpios = <&pio 6 2 GPIO_ACTIVE_HIGH>; /* PG2 */
+			default-state = "off";
+		};
+	};
+};
+
+&emac {
+	status = "okay";
+};
+
+&mmc0 {
+	broken-cd;
+	bus-width = <4>;
+	vmmc-supply = <&reg_vcc3v3>;
+	status = "okay";
+};
+
+&uart0 {
+	pinctrl-0 = <&uart0_pb_pins>;
+	pinctrl-names = "default";
+	status = "okay";
+};
+
+&usb_otg {
+	dr_mode = "otg";
+	status = "okay";
+};
+
+&usbphy {
+	usb0_id_det-gpios = <&pio 5 6 GPIO_ACTIVE_HIGH>;
+	status = "okay";
+};
